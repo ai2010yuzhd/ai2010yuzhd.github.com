@@ -1,0 +1,5 @@
+*{padding: 0;margin: 0; list-style: none}
+#menu{  width:408px; margin:50px auto; background:#ccc; height:32px; position:relative;}
+#menu li{ width:100px; height:30px; line-height:30px; text-align:center; float:left;
+ border:1px solid #000; position:relative; z-index:2; cursor: pointer; }
+#menu li.box{ position:absolute; left:0; top:0; background:yellow; z-index:1; opacity:0.4;}

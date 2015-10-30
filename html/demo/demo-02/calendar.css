@@ -1,0 +1,11 @@
+li{float: left;width: 30px; height: 30px;margin: 10px;text-align: center; line-height: 30px;}
+ul,ol { overflow:hidden;}
+#box{width: 350px;   border:1px solid #ccc; margin: 50px auto; position: relative;}
+#box span{display: block;width: 350px; height: 40px; line-height: 40px;  text-align: center; color: #fff; background-color: red; font-weight: 800;font-size: 18px;}
+#box a{display: block;width: 30px; height: 30px; color: #fff; font-weight: 800;position: absolute;top:10px; text-decoration: none; font-size: 20px; text-align: center;}
+#box a.left{left:5px;}
+#box a.right{right:5px;}
+#box ul{}
+#box ul li{ font-weight: 800;font-size: 18px;}
+.Tay{border-radius: 50%; background-color: red; color: #fff;font-weight: 800;}
+.past{color: #999;}

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>弹性菜单</title>
+	<link rel="stylesheet" type="text/css" href="demo.css">
+	<script src="demo.js"></script>
+	<script>
+
+	window.onload =function(){
+		var oMenu = document.getElementById('menu');
+	 
+		var aLi = oMenu.children;
+	 	var iNow=0;
+		var obj = aLi[aLi.length-1];
+		for(var i=0;i<aLi.length-1;i++)
+		{
+			aLi[i].dataIndex = i;
+			aLi[i].onmouseover =function(){
+				startMove(obj,this.offsetLeft);
+			}
+			aLi[i].onmouseout =function(){
+				startMove(obj,aLi[iNow].offsetLeft);
+			}
+			aLi[i].onclick =function(){
+				iNow = this.dataIndex;
+				 
+			}
+		}
+	}
+	</script>
+</head>
+<body>
+	<ul id="menu">
+		<li>首页</li>
+	    <li>联系方式</li>
+	    <li>公司简介</li>
+	    <li>产品展示</li>
+	    <li class="box"></li>
+	</ul>
+</body>
+</html>

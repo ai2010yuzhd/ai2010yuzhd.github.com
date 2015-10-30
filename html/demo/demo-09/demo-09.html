@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>仿苹果菜单</title>
+	<style>
+	* { margin:0; padding:0; }
+	body { padding-top:100px; text-align:center; }
+	input { width:120px; height:40px; text-align:center; font-size:20px; }
+	div { position:absolute; bottom:100px; left:0; width:100%; text-align:center; }
+	img { width:64px; height:64px; }
+	</style>
+	<script src="../JS/common.js"></script>
+	<script>
+	window.onload =function(){
+		var oMenu = document.getElementById('menu');
+		var aImg = oMenu.getElementsByTagName('img');
+		document.onmousemove=function(ev){
+			var oEvent =ev || event;
+			for(var i=0;i<aImg.length;i++)
+			{
+				var json=getPos(aImg[i]);
+				var a=json.left+aImg[i].offsetWidth/2-oEvent.clientX;
+				var b=json.top+aImg[i].offsetHeight/2-oEvent.clientY;
+				var c=Math.sqrt(a*a+b*b);
+
+				var scale=(1-c/500).toFixed(2);
+				(scale<0.5) && (scale=0.5);
+				
+				aImg[i].style.width=128*scale+'px';
+				aImg[i].style.height=128*scale+'px';
+				
+			}
+		}
+	}
+	</script>
+</head>
+<body>
+	<div id="menu">
+		<img src="apple/1.png" />
+		<img src="apple/2.png" />
+		<img src="apple/3.png" />
+		<img src="apple/4.png" />
+		<img src="apple/5.png" />
+	</div>
+</body>
+</html>

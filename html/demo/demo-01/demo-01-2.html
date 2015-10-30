@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>自动轮播图</title>
+	<style type="text/css">
+	*{margin: 0;padding: 0;list-style: none; }
+	#box{width: 520px;height: 280px; margin: 50px auto; border:1px solid red;position:relative; overflow: hidden;  }
+	#box a{ opacity: 0 ;position: absolute; width: 30px; height: 38px; background-image: url(images/tab.png);
+		z-index: 3;}
+	#box .prev{left: 10px; background-position: 0 80px; top:120px;}
+	#box .next{right: 10px;background-position:-30px 40px;;top:120px;}
+	#box ul{ position: absolute;top:0; left:0; z-index: 1}
+	#box ul li{}
+	#box ol{position: absolute; bottom: 10px; left: 50%; background-color: #fff; border-radius: 10px; margin-left: -33px;z-index: 2}
+	#box ol li{ width: 10px; height: 10px; background-color: #ccc; border-radius: 50%; margin: 2px 5px;overflow: hidden;float: left;cursor: pointer;}
+	#box ol li.active{background-color: red}
+	</style>
+	<script src="../JS/move.js"></script>
+	<script src="../JS/common.js"></script>
+	<script>
+	window.onload =function(){
+		var oBox = document.getElementById('box');
+		var oUl = oBox.getElementsByTagName('ul')[0];
+		var oOl = oBox.getElementsByTagName('ol')[0];
+		var aLi = oOl.children;
+		var aImg = oUl.children;
+		var aA = oBox.getElementsByTagName('a');
+		var oPrev = aA[0];
+		var oNext = aA[1];
+		var iNow = 0;
+		var len=aImg.length;
+
+		oUl.style.top=-aImg[0].offsetHeight+"px";
+	    var thelast=aImg[aImg.length-1].cloneNode(true);
+	    var thefirst=aImg[0].cloneNode(true);
+			oUl.insertBefore(thelast,aImg[0]);
+			oUl.appendChild(thefirst);
+
+
+		oBox.onmouseover=function(){
+			move(oPrev,{opacity:1},{duration:800});
+			move(oNext,{opacity:1},{duration:800}); 
+		}
+		oBox.onmouseleave=function(){
+			move(oPrev,{opacity:0},{duration:800});
+		}
+		oPrev.onclick=function(){
+		 
+			iNow--;
+			if(iNow<0)
+			{
+            move(oUl,{top:0},{duration:800,complete:function(){
+
+            	oUl.style.top=len*-aImg[0].offsetHeight+"px";
+            	iNow=aImg.length-2;
+            	oUl.removeChild(thelast);
+            	
+            }});
+			}
+			else
+			{
+			move(oUl,{top:iNow*-aImg[0].offsetHeight},{duration:800});
+			}
+		}
+		oNext.onclick=function(){
+			iNow++;
+			
+		 	if(iNow==len-1)
+		 	{	
+		 		oUl.appendChild(thefirst);
+		 	}
+		 	 
+		 	move(oUl,{top:iNow*-aImg[0].offsetHeight},{duration:800,complete:function(){
+
+			 	if(iNow==len)
+			 	{
+	                  
+			 		oUl.removeChild(aImg[aImg.length-1]);
+			 		iNow=0;
+			 		oUl.style.top=0+"px";
+			 		
+			 	}
+		 	}
+		 });
+		 	
+
+			/*move(aImg[0],{height:0},{duration:800,complete:function(){
+				var obj = aImg[0];
+				obj.style.height = '280px';
+				oUl.appendChild(obj);			 
+				tab();
+			}});*/
+			
+		}
+
+		
+		for(var i=0;i<aLi.length;i++)
+		{
+			(function(index){
+				aLi[i].onclick=function(){
+					iNow=index;
+					tab();
+					move(oUl,{top:-iNow*aImg[0].offsetHeight},{duration:800});
+				}
+			})(i);
+		}
+
+		function tab()
+		{
+			for(var i=0;i<aLi.length;i++)
+			{
+				aLi[i].className='';
+			}
+			aLi[iNow].className='active';
+		}
+	}
+	</script>
+
+</head>
+<body>
+	<div id="box" class="box">
+		<a href="javascript:;" class="prev"></a>
+		<a href="javascript:;" class="next"></a>
+		<ul>
+			<li class="active"><img src="images/a1.jpg"></li>
+			<li><img src="images/a2.jpg"></li>
+			<li><img src="images/a3.png"></li>
+			<li><img src="images/a4.jpg"></li>
+			<li><img src="images/a5.jpg"></li>
+		</ul>
+		<ol>
+			<li class="active"></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ol>
+	</div>
+</body>
+</html>

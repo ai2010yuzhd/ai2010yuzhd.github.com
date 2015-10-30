@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+	*{margin:0; padding:0;}
+	input { width:80px; height:30px; line-height:30px; position:absolute; top:50px; left:150px}
+	div{ position:relative; width:680px; height:344px; margin:50px auto;}
+	div img{width: 100%;height: 100%;}
+	span{ position:absolute; }
+	</style>
+	<script src="../JS/move.js"></script>
+	<script>
+	window.onload =function(){
+		var oBtn = document.getElementById('btn');
+		var oDiv = document.getElementById('box');
+		var oImg = document.getElementById('bgImg');
+		var row =1;
+		var col = 20;
+		var W = 680/col;
+		var H = 344/row;
+		var aPath = ['1.jpg','2.jpg','3.jpg','4.jpg'];
+		var bFlag = false;
+		var aPos=[];
+		var now=0;
+		var Alltimer = null;
+		for(var r = 0;r<row;r++)
+		{
+			for(var c = 0; c<col;c++)
+			{
+				var oSpan = document.createElement('span');
+				var left = c*W;
+				var top =  r*H;
+				oSpan.style.left = left+'px';
+				oSpan.style.top = top+'px';
+				oSpan.style.width=W+'px';
+				oSpan.style.height=H+'px';
+				oSpan.style.backgroundPosition = -left+'px  -'+top+'px';
+				oDiv.appendChild(oSpan);
+				aPos.push(oSpan);
+			}
+		}
+		oBtn.onclick = function(){
+		if(bFlag) //防止多次点击
+		{
+			return ;
+		}
+		 
+		bFlag = true;
+		now++;
+		for(var i=0;i<aPos.length;i++)
+		{
+			aPos[i].style.opacity = 0;
+			aPos[i].style.backgroundImage = 'url(images/'+aPath[now%aPath.length]+')';
+		}
+		var n =0;
+		show();
+	 
+		function show()
+		{
+			var timer = setInterval(function(){
+				(function(index){	
+					move(aPos[n],{opacity:1},{
+						
+						complete:function(){
+							if(index == aPos.length-1)
+							{
+								bFlag = false;
+								oImg.src = 'images/'+aPath[now%aPath.length];							
+							}
+						}
+		
+					});
+				})(n);
+				n++;
+				if(n==aPos.length)
+				{
+					clearInterval(timer);
+				}
+			},200);
+		}
+		
+	}
+	
+	}
+	</script>
+</head>
+<body>
+	<input type="button" value="下一张" id="btn" />
+	<div id="box">	 
+    	<img src="images/1.jpg" id="bgImg"/>
+   </div>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+	* { margin:0; padding:0; }
+	ul { overflow:hidden; position:relative; width:920px; height:305px; border:1px solid #ccc; margin:50px auto; }
+	li { list-style:none; position:absolute; top:0; left:0; padding-left:20px; }
+	span { position:absolute; top:0; left:0; width:20px; height:100%; cursor: pointer; text-align: center;}
+</style>
+<script src="../JS/move.js"></script>
+<script type="text/javascript">
+window.onload =function(){
+	var aLi=document.getElementsByTagName('li');
+	var aSpan=document.getElementsByTagName('span');
+	var liW=aLi[0].offsetWidth;
+	var sW=aSpan[0].offsetWidth;
+	
+	// 默认left
+	for (var i=0; i<aLi.length; i++)
+	{
+		if (i != 0)
+		{
+			aLi[i].style.left=liW+(i-1)*sW+'px';
+		}
+	}
+	for (var i=0; i<aSpan.length; i++)
+	{
+		(function (index){
+			aSpan[i].onmouseover=function (){
+				index
+				for (var i=0; i<aLi.length; i++)
+				{
+					if (i <= index)
+					{
+						// aLi[i].style.left=i*sW+'px';
+						move(aLi[i], {left:i*sW}, {
+							duration:300	
+						});
+					}
+					else
+					{
+						// aLi[i].style.left=liW+(i-1)*sW+'px';
+						move(aLi[i], {left:liW+(i-1)*sW}, {
+							duration:300	
+						});
+					}
+				}
+			};
+		})(i);
+	}
+}
+
+</script>
+</head>
+<body>
+	<ul>
+		<li>
+			<span style="background:#F90;">移动互联网</span>
+			<img src="sfq/0.jpg" />
+		</li>
+		
+		<li>
+			<span style="background:#FF3;">移动平台游戏开发</span>
+			<img src="sfq/1.jpg" />
+		</li>
+		
+		<li>
+			<span style="background:#0CF;">全平台互通</span>
+			<img src="sfq/2.jpg" />
+		</li>
+		
+		<li>
+			<span style="background:#0FC;">H5</span>
+			<img src="sfq/3.jpg" />
+		</li>
+	</ul>
+</body>
+</html>

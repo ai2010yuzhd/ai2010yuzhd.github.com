@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>许愿墙</title>
+<link rel="stylesheet"   href="index.css" />
+<script src="../JS/common.js"></script>
+<script>
+window.onload =function(){
+    var oSend = document.getElementById('send');
+    var oSendBox = document.getElementById('send-form');
+    var oClose=document.getElementById('close');
+    var oBtnSend=document.getElementById('send-btn');
+    var oUserName = document.getElementById('username');
+    var oContent = document.getElementById('content');
+    var oMain = document.getElementById('main');
+    var oLayer = document.getElementById('layer');
+    var oPhiz = document.getElementById('phiz');
+    var aImg =oPhiz.children; 
+    var URL='wish.php';
+    var oClientW = document.documentElement.clientWidth;
+    var oClientH = document.documentElement.clientHeight;
+    oSend.onclick=function(){
+        oSendBox.style.display='block';
+        oLayer.style.display='block';
+        oSendBox.style.left=(oClientW-oSendBox.offsetWidth)/2+'px';
+    }
+    oClose.onclick=function(){
+        oSendBox.style.display='none';
+        oLayer.style.display='none';
+    }
+    for(var i=0;i<aImg.length;i++)
+    {
+        aImg[i].onclick=function(){  
+            oContent.value+='['+this.alt+']';   
+        };
+    }
+    function str2Face(str){
+        var arrText=[];
+        var arrP=[];
+        for(var i=0; i<aImg.length; i++){
+            arrText.push('['+aImg[i].alt+']');
+            arrP.push(aImg[i].src);
+        }
+        
+        for(var i=0; i<arrText.length; i++){
+            if(str.indexOf(arrText[i])!=-1){
+                str=str.replace(arrText[i],'<img src="'+arrP[i]+'">');
+                i--;    
+            }
+        }
+        return str;
+    }
+    //发布愿望
+    oBtnSend.onclick=function(){
+        ajax({
+            url:URL,
+            data:{
+                act:'add',
+                username:encodeURIComponent(oUserName.value),
+                content:encodeURIComponent(oContent.value)
+            },
+            success:function(str){
+                var json = eval('('+str+')');
+                if(json.error)
+                {
+                    alert(json.msg);
+                }else
+                {
+                    alert('添加成功！');
+                    oSendBox.style.display='none';
+                    oLayer.style.display='none';
+                    getAllMsg();
+                }
+            }
+        });
+    }
+    getAllMsg();
+    function getAllMsg()
+    {
+         ajax({
+            url:URL,
+            data:{
+                act:'get' 
+            },
+            success:function(str){
+                var json = eval('('+str+')');
+                var arr = json.msg;
+                if(json.error)
+                {
+                    alert(json.msg);
+                }else
+                {
+                    oMain.innerHTML='';
+                    for(var i=0;i<arr.length;i++)
+                    {
+                        var j = arr[i]
+                        var oDl = createWish(j.username,j.content,j.id,j.time);
+                        oMain.appendChild(oDl);
+                        rudPosition(oDl);
+                        drag(oDl);
+                    }
+                }
+            }
+        });
+    }
+    function createWish(username,content,id,time)
+    {
+        var oDl = document.createElement('dl');
+        oDl.className='paper a'+(id%5+1);
+        oDl.innerHTML='<dt><span class="username">'+username+'</span>'
+            +'<span class="num">No.'+id+'</span>'
+        +'</dt>'
+        +'<dd class="content">'+str2Face(content)+'</dd>'
+        +'<dd class="bottom">'
+            +'<span class="time">'+formatDate(time)+'</span>'
+            +'<a href="javascript:;" class="close"></a>'
+        +'</dd>';
+        var oA= oDl.getElementsByTagName('a')[0];
+        oA.onclick=function(){
+            var bFlag=confirm('确认删除吗?');
+            if(!bFlag) return;
+            ajax({
+                url:URL,
+                data:{
+                    act:'delete',
+                    id:id
+                },
+                success:function(str){
+                    var json = eval('('+str+')');
+                    if(json.error)
+                    {
+                        alert(json.msg);
+                    }else{
+                        oMain.removeChild(oDl);
+                    }
+                }
+            });
+        }
+        return oDl;
+    }
+    function rudPosition(obj){
+        obj.style.left=rnd(0,oClientW-obj.offsetWidth)+'px';
+        obj.style.top=rnd(0,oClientH-obj.offsetHeight-150)+'px';
+    }
+    //拖拽
+    function drag(obj)
+    {
+        obj.onmousedown = function(ev){
+            var oEvent = ev || event;
+            var disX = oEvent.clientX-obj.offsetLeft;
+            var disY = oEvent.clientY-obj.offsetTop;
+            document.onmousemove=function(ev){
+                var oEvent=ev||event;
+                var left = oEvent.clientX-disX;
+                var top = oEvent.clientY-disY;
+                if(left<0)
+                {
+                    left=0;
+                }
+                if(left>=oClientW-obj.offsetWidth)
+                {
+                    left = oClientW-obj.offsetWidth;
+                }
+                if(top<0)
+                {
+                    top=0;
+                }
+                if(top>=oClientH-obj.offsetHeight-150)
+                {
+                    top=oClientH-obj.offsetHeight-150;
+                }
+                obj.style.left = left+'px';
+                obj.style.top = top+'px';
+            }
+            document.onmouseup=function(){
+                document.onmousemove=null;
+                document.onmouseup=null;
+            }
+            return false;
+        }
+    }
+}
+
+function formatDate(time){
+    var oDate=new Date();
+    oDate.setTime(time*1000);
+    var sDate=oDate.getFullYear()+'-'+(oDate.getMonth()+1)+'-'+oDate.getDate()+' '+oDate.getHours()+':'+oDate.getMinutes()+':'+oDate.getSeconds();
+    return sDate;
+}
+</script>
+</head>
+<body>
+<div id='top'>
+    <span id='send'></span>
+</div>
+<div id='main'>
+     <!--<dl class='paper a1'>
+        <dt>
+            <span class='username'>智能社</span>
+            <span class='num'>No.00001</span>
+        </dt>
+        <dd class='content'>欢迎来到智能社</dd>
+        <dd class='bottom'>
+            <span class='time'>今天08:30</span>
+            <a href="" class='close'></a>
+        </dd>
+    </dl> --> 
+</div>
+<div id="layer"></div>
+<div id='send-form'>
+    <p class='title'><span>许下你的愿望</span><a href="javascript:;" id='close'></a></p>
+    <form action="" name='wish'>
+        <p>
+            <label for="username">昵称：</label>
+            <input type="text" name='username' id='username'/>
+        </p>
+        <p>
+            <label for="content">愿望：(您还可以输入&nbsp;<span id='font-num'>50</span>&nbsp;个字)</label>
+            <textarea name="content" id='content'></textarea>
+            <div id='phiz'>
+                <img src="./Images/phiz/zhuakuang.gif" alt="抓狂" />
+                <img src="./Images/phiz/baobao.gif" alt="抱抱" />
+                <img src="./Images/phiz/haixiu.gif" alt="害羞" />
+                <img src="./Images/phiz/ku.gif" alt="酷" />
+                <img src="./Images/phiz/xixi.gif" alt="嘻嘻" />
+                <img src="./Images/phiz/taikaixin.gif" alt="太开心" />
+                <img src="./Images/phiz/touxiao.gif" alt="偷笑" />
+                <img src="./Images/phiz/qian.gif" alt="钱" />
+                <img src="./Images/phiz/huaxin.gif" alt="花心" />
+                <img src="./Images/phiz/jiyan.gif" alt="挤眼" />
+            </div>
+        </p>
+        <span id='send-btn'></span>
+    </form>
+</div>
+<!--[if IE 6]>
+<script type="text/javascript" src="./Js/iepng.js"></script>
+<script type="text/javascript">
+    DD_belatedPNG.fix('#send,#close,.close','background');
+</script>
+<![endif]-->
+</body>
+</html>

@@ -1,0 +1,7 @@
+*{margin: 0;padding: 0;list-style: none;}
+body{text-align: center;}
+input{width: 150px; height: 30px; margin-top: 20px;}
+#box{ width: 510px; height: 510px;  margin: 50px auto; overflow: hidden;border: 1px solid red;}
+#box li {width: 150px;height: 150px;margin: 10px; float: left;}
+#box li img{width: 100%;}
+.active{ opacity: 0.5}

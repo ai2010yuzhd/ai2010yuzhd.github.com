@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>日历组件</title>
+ 	<style type="text/css">
+	*{margin:0; padding: 0;list-style: none}
+ 	</style>
+ 	<script src="calendar.js"></script>
+	<script>
+	window.onload =function(){
+	 	var oBox = document.getElementById('box');
+	 	calendar(oBox);
+	}
+	</script>
+</head>
+<body>
+	<div id="box" class="box">
+		<a href="javascript:;" class="left"><</a>
+		<a href="javascript:;" class="right">></a>
+		<span id="top">XX年XX月</span>
+		<ul  >
+			<li>一</li>
+			<li>二</li>
+			<li>三</li>
+			<li>四</li>
+			<li>五</li>
+			<li class="week">六</li>
+			<li class="week">日</li>
+		</ul>
+		<ol >
+		 
+		</ol>
+	</div>
+</body>
+</html>

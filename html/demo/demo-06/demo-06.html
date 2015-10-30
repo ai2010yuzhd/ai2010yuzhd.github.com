@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>百度一下,你就知道</title>
+	<style type="text/css">
+	*{margin: 0; padding: 0; list-style: none; }
+	#box{width:600px; margin: 80px auto; text-align: center; position: relative; height: 195px;}
+	#box img{width: 270px; height: 129px;}
+	#txt{width: 505px; height: 35px; font-size: 14px; text-indent: 5px; }
+	#btnSearch{width: 90px; height: 39px; border:0;  background-color:rgb(51, 133, 255); color: #fff; font-size: 14px; cursor: pointer;}
+	#box ul{display: none;  width: 507px; border: 1px solid #ccc; border-top: 0; position:absolute;left:0;top:172px;}
+	#box ul li{ width: 100%; height: 35px; line-height: 35px; text-align: left; text-indent: 5px; }
+	#box ul li.active{background-color: #eee;}
+	</style>
+	<script type="text/javascript" src='../JS/common.js'></script>
+	<script>
+	window.onload =function(){
+		var oT = document.getElementById('txt');
+		var oUl = document.getElementById('list');
+
+		var iNow=-1;
+		var oldValue='';
+		oT.onkeyup=function(ev){
+			var oEvent = ev || event;
+			if(oEvent.keyCode==40 || oEvent.keyCode==38)return;
+		
+			jsonp({
+				url:'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',
+				data:{
+					wd:oT.value
+				},
+				success:function(json){
+					var arr =json.s;
+					if(arr.length){
+						oUl.style.display='block';
+					}else{
+						oUl.style.display = 'none';
+					}
+					oUl.innerHTML='';
+					for(var i=0;i<arr.length;i++)
+					{
+						var oLi = document.createElement('li');
+						oLi.innerHTML = arr[i];
+						oUl.appendChild(oLi);
+						oLi.dataIndex = i;
+						oLi.onmouseover =function(){
+							for(var i=0;i<oUl.children.length;i++)
+							{
+								oUl.children[i].className='';
+							}
+							this.className='active';
+							iNow = this.dataIndex;
+						}
+						
+					}
+				}
+
+			});
+
+			oldValue=oT.value;	
+		}
+		oT.onkeydown = function(ev){
+			var oEvent = ev || event;
+			var aLi = oUl.children;
+			if(oEvent.keyCode==40){
+				iNow++;
+				if(iNow==aLi.length)iNow=-1;
+				tab();
+			}
+			if(oEvent.keyCode==38)
+			{
+				iNow--;
+				if(iNow==-2) iNow=aLi.length-1;
+				tab();
+				return false;
+			}
+			function tab()
+			{
+				for(var i=0;i<aLi.length;i++)
+				{
+					aLi[i].className='';
+				}
+				if(iNow==-1)
+				{
+					oT.value = oldValue;
+				}
+				aLi[iNow].className='active';
+				oT.value = aLi[iNow].innerHTML;
+			}
+		}	
+	}
+	</script>
+</head>
+<body>
+	<div id="box">
+		<img src="bd_logo1.png">
+		<input type="text" id="txt" /><input type="button" id="btnSearch" value="百度一下">
+		<ul id="list"> 
+		</ul>
+	</div>
+</body>
+</html>
