@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>仿文件拖入邮箱效果</title>
+	<style type="text/css">
+	*{margin: 0;padding: 0;}
+	#box{width: 600px; height: 300px; border:1px solid #ccc; position:absolute; left: 50%;top: 50%;margin-left: -300px;margin-top: -150px;}
+ 	#box div{ width: 100%; min-height: 50px; position: absolute;left: 0;top: 0; overflow: hidden; }
+ 	#box div span{width: 290px; height: 40px; line-height: 40px; background-color: #eee; position: absolute;top: 0; margin-top: 5px; margin-left: 5px; margin-right: 5px; font-size: 14px;}
+ 	#box div span a{color: #f60; text-decoration: none;}
+ 	#box div span:nth-child(1){left: 0;}
+ 	#box div span:nth-child(2){right: 0;}
+ 	
+ 	#box .text{display: none; position: absolute;left: 0;  top:50px; width:598px; height: 150px; border: 1px dashed #999;text-align: center; line-height: 150px; font-size: 30px; }
+	</style>
+	<script type="text/javascript">
+	window.onload=function(){
+		var oT = document.querySelector('.text');
+		var oShow =  document.querySelector('.show');
+		var timer = null;
+		document.ondragover=function(){
+			clearInterval(timer);
+			oT.style.display='block';
+			timer=setInterval(function(){
+				oT.style.display='none';
+			},100);
+		}
+		oT.ondragenter=function(){
+			oT.innerHTML='释放鼠标';
+		}
+		oT.ondragleave=function(){
+			oT.innerHTML='将文件拖拽至此区域';
+		}
+		oT.ondragover=function(){
+			return false;
+		}
+		oT.ondrop=function(ev){ 
+			var oFile=ev.dataTransfer.files[0];
+			var oSpan = document.createElement('span');
+			 
+			oSpan.innerHTML=oFile.name+'('+oFile.size+') &nbsp;<a href="javascript:;">删除</a>';
+			oShow.appendChild(oSpan);
+			var oA = oSpan.getElementsByTagName('a')[0];
+			oA.onclick=function(){
+				this.parentNode.parentNode.removeChild(this.parentNode);
+			}
+
+			return false;
+		}	 
+	}
+	</script>
+</head>
+<body>
+	<div id="box">
+		<div class="show">
+		
+		</div>
+		<span class="text"> 将文件拖拽至此区域</span>
+	</div>
+</body>
+</html>
